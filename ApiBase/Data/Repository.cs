@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TemplateApi3.Controllers;
-using TemplateApi3.Models;
+using ApiBase.Controllers;
+using ApiBase.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace TemplateApi3.Data
+namespace ApiBase.Data
 {
     public class Repository<TDbContext> : IRepository where TDbContext : DbContext
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace TemplateApi3.Utils
+namespace ApiBase.Utils
 {
     public class UsersConfig
     {

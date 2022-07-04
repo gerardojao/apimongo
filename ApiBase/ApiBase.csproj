@@ -5,11 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Template\" />
+    <Folder Include="Templates\" />
+    <Folder Include="Procedures\" />
     <Folder Include="wwwroot\" />
-    <Folder Include="Utils\" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0" />
     <PackageReference Include="Azure.Storage.Files.Shares" Version="12.10.0" />
@@ -28,6 +27,5 @@
     <PackageReference Include="SendGrid" Version="9.28.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
   </ItemGroup>
-
 
 </Project>

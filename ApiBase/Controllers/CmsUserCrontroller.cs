@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TemplateApi3.Controllers
+namespace ApiBase.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

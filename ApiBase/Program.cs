@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TemplateApi3
+namespace ApiBase
 {
     public class Program
     {

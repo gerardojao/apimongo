@@ -3,14 +3,14 @@ using System.Text;
 using System.Security.Cryptography;
 using Microsoft.Extensions.Configuration;
 
-namespace TemplateApi3.Utils
+namespace ApiBase.Utils
 {
     public class PasswordEncryptor
     {
         private readonly IConfiguration configuration;
         private readonly RNGCryptoServiceProvider randomNumberGenerator;
 
-        public CMSEncryptor (IConfiguration _configuration)
+        public PasswordEncryptor(IConfiguration _configuration)
         {
             configuration = _configuration;
             
@@ -31,6 +31,5 @@ namespace TemplateApi3.Utils
             var watch = Encrypt(passwordAttempt + configuration["Encryption:Key"]);
             return (Encrypt(passwordAttempt) == hashedPassword);
         }
-    }
     }
 }

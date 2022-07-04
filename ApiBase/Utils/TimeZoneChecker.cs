@@ -3,13 +3,13 @@ using System.Linq;
 using ApiBase.Data;
 using Microsoft.Extensions.Configuration;
 
-namespace TemplateApi3.Utils
+namespace ApiBase.Utils
 {
     public class TimeZoneChecker
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
-        public NormalizedDateTime(AppDbContext context, IConfiguration configuration)
+        public TimeZoneChecker(AppDbContext context, IConfiguration configuration)
         {
             _configuration = configuration;
             _context = context;
@@ -48,7 +48,7 @@ namespace TemplateApi3.Utils
             return currentDateTime.Date;
         }
 
-        public DateTime LocalizeTime(string _sid, DateTime time)
+        /*public DateTime LocalizeTime(string _sid, DateTime time)
         {
             var member = _context.UserAddresses.FirstOrDefault(e => e.UserId == _sid );
             var now = time;
@@ -67,9 +67,8 @@ namespace TemplateApi3.Utils
 
             } else {
                 return now.AddHours(0);
-
             }
-        }
+        }*/
 
         public DateTime UtcToServerTime(DateTime time)
         {
