@@ -66,8 +66,8 @@ namespace ApiBase.Controllers
                     respuesta.Data.Add(new
                     {
                         question.Id,
-                        question.QuestionDescription,                        
-                        question.UserId                        
+                        question.QuestionDescription                      
+                                         
         
                 });
                     respuesta.Ok = 1;

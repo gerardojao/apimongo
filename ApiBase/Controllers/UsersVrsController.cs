@@ -108,7 +108,7 @@ namespace ApiBase.Controllers
                         CreatedAt = new TimeZoneChecker(_context, _appsettings).DT(),
                         VerificationCode = token                        
                     };
-                    //await _repository.CreateAsync(usersVr);
+                    await _repository.CreateAsync(usersVr);
                     respuesta.Ok = 1;
                     respuesta.Data.Add(usersVr);
                     

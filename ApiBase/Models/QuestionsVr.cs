@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 #nullable disable
 
@@ -11,14 +12,16 @@ namespace ApiBase.Models
         {
             AnswersVrs = new HashSet<AnswersVr>();
         }
-
+        [JsonIgnore]
         public int Id { get; set; }
         public string QuestionDescription { get; set; }
-        public int UserId { get; set; }
+        [JsonIgnore]
         public DateTime CreatedAt { get; set; }
+        [JsonIgnore]
         public DateTime? UpdatedAt { get; set; }
+        [JsonIgnore]
         public DateTime? DeletedAt { get; set; }
-
+        [JsonIgnore]
         public virtual ICollection<AnswersVr> AnswersVrs { get; set; }
     }
 }
