@@ -31,7 +31,7 @@ namespace ApiBase.Controllers
         }
         // GET: api/<UsersVrsController>
         [HttpGet]
-        public async Task<ActionResult> GetAllUsers18()
+        public async Task<ActionResult> GetAllUsers()
         {
             Respuesta<object> respuesta = new Respuesta<object>();
             try

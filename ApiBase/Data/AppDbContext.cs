@@ -13,7 +13,8 @@ namespace ApiBase.Data
         {
         }
 
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+            : base(options)
         {
         }
 
@@ -26,7 +27,7 @@ namespace ApiBase.Data
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("server=tcp:db-amstel.database.windows.net;database=Int-db-amstel; persist security info=True;user id=adminamstel;Password=A4#t3q@lt2;;");
+                optionsBuilder.UseSqlServer("server=tcp:db-amstel.database.windows.net;database=Int-db-amstel;persist security info=True;user id=Adminamstel;password=A4#t3q@lt2;");
             }
         }
 
@@ -46,8 +47,12 @@ namespace ApiBase.Data
                 entity.HasOne(d => d.Question)
                     .WithMany(p => p.AnswersVrs)
                     .HasForeignKey(d => d.QuestionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AnswersVR_QuestionsVR");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AnswersVrs)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_AnswersVR_UsersVR");
             });
 
             modelBuilder.Entity<QuestionsVr>(entity =>
@@ -58,12 +63,6 @@ namespace ApiBase.Data
                     .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.QuestionsVrs)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_QuestionsVR_UsersVR");
             });
 
             modelBuilder.Entity<UsersVr>(entity =>
@@ -85,13 +84,14 @@ namespace ApiBase.Data
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.VerificationCode)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.State)
                     .IsRequired()
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.VerificationCode)
+                    .IsRequired()
+                    .HasMaxLength(10)
                     .IsUnicode(false);
             });
 
