@@ -24,5 +24,10 @@ namespace ApiBase.Utils
             }
             return emailverify;
         }
+
+        internal static object VerifyGmail(object email)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

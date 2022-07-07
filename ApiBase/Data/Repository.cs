@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AmstelAPI.Models;
 using ApiBase.Controllers;
 using ApiBase.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -69,5 +70,84 @@ namespace ApiBase.Data
             this._dbContext.Set<T>().Update(entity);
             _ = await this._dbContext.SaveChangesAsync();
         }
-   }
+
+        //public async Task<bool> CreateUser(UsersVr entity)
+        //{
+        //    this._dbContext.Set<UsersVr>().Add(entity);
+        //    var created = await this._dbContext.SaveChangesAsync();
+        //    return created > 0;
+        //}
+
+        //public async Task<bool> VerifyUser(UsersVr entity)
+        //{
+        //    this._dbContext.Set<UsersVr>().Update(entity);
+        //    var created = await this._dbContext.SaveChangesAsync();
+        //    return created > 0;
+        //}
+
+        //public async Task UpdateUserRegisterAsync(UsersVr u, UserUpdateModel uu)
+        //{
+        //    if (uu.FirstName != null)
+        //    { u.FirstName = uu.FirstName; }
+        //    if (uu.LastName != null)
+        //    { u.LastName = uu.LastName; }
+        //    if (uu.Email != null)
+        //    { u.Email = uu.Email; }
+           
+        //    this._dbContext.Set<UsersVr>().Update(u);
+        //    _ = await this._dbContext.SaveChangesAsync();
+        //}
+        //public async Task UpdateUserAsync(UsersVr u, AwardUserAddress ua, UserUpdateModel uu)
+        //{
+        //    if (uu.FirstName != null)
+        //    { u.FirstName = uu.FirstName; }
+        //    if (uu.LastName != null)
+        //    { u.LastName = uu.LastName; }
+        //    if (uu.Email != null)
+        //    { u.Email = uu.Email; }
+          
+
+        //    if (uu.Municipio != null)
+        //    { ua.Province = uu.Municipio; }
+           
+        //    if (uu.PostalCode != 0)
+        //    { ua.PostalCode = uu.PostalCode; }
+        //    if (uu.City != null)
+        //    { ua.City = uu.City; }
+        //    if (uu.State != null)
+        //    { ua.State = uu.State; }
+            
+
+        //    this._dbContext.Set<UsersVr>().Update(u);
+        //    _ = await this._dbContext.SaveChangesAsync();
+        //    this._dbContext.Set<AwardUserAddress>().Update(ua);
+        //    _ = await this._dbContext.SaveChangesAsync();
+        //}
+
+        //public async Task UpdateUserProfileAsync(UsersVr u, AwardUserAddress ua, UpdateModel uu)
+        //{
+        //    if (uu.FirstName != null)
+        //    { u.FirstName = uu.FirstName; }
+        //    if (uu.LastName != null)
+        //    { u.LastName = uu.LastName; }
+        //    if (uu.Email != null)
+        //    { u.Email = uu.Email; }
+         
+
+        //    if (uu.Street != null)
+        //    { ua.Street = uu.Street; }
+        //    if (uu.ExtNumber != null)
+        //    { ua.ExtNumber = uu.ExtNumber; }
+        //    if (uu.IntNumber != null)
+        //    { ua.IntNumber = uu.IntNumber; }
+        //    if (uu.Referency != null)
+        //    { ua.Referency = uu.Referency; }
+
+        //    this._dbContext.Set<UsersVr>().Update(u);
+        //    _ = await this._dbContext.SaveChangesAsync();
+        //    this._dbContext.Set<AwardUserAddress>().Update(ua);
+        //    _ = await this._dbContext.SaveChangesAsync();
+        //}
+
+    }
 }
