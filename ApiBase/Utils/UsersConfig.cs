@@ -5,9 +5,9 @@ namespace ApiBase.Utils
     public class UsersConfig
     {
         // Function to remove . from gmail
-        public static String CheckGmail(string email)
+        public static string CheckGmail(string email)
         {
-            var emailverify = "";
+            string emailverify;
             var auxemail = email.Split("@");
             if (auxemail[1] == "gmail.com")
             {
@@ -20,14 +20,9 @@ namespace ApiBase.Utils
             }
             else
             {
-                return email;
+                emailverify = email;
             }
             return emailverify;
-        }
-
-        internal static object VerifyGmail(object email)
-        {
-            throw new NotImplementedException();
         }
     }
 }

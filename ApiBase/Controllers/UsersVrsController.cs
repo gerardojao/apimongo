@@ -90,11 +90,9 @@ namespace ApiBase.Controllers
         public async Task<IActionResult> Register(UsersVrRegister userR)
         {
             Respuesta<object> respuesta = new Respuesta<object>();
-            String token = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8);
-            
+            string token = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8);
             try
             {
-             
                 var user = await _context.UsersVrs.Where(u => u.Email == userR.Email).FirstOrDefaultAsync();
                 if (user != null)
                 {
@@ -106,20 +104,14 @@ namespace ApiBase.Controllers
                     var usersVr = new UsersVr 
                     {
                         FullName = userR.Fullname,
-                        Email = (string)UsersConfig.VerifyGmail(userR.Email),
+                        Email = UsersConfig.CheckGmail(userR.Email),
                         CreatedAt = new TimeZoneChecker(_context, _appsettings).DT(),
                         VerificationCode = token                        
-                };
-                    await _repository.CreateAsync(usersVr);
+                    };
+                    //await _repository.CreateAsync(usersVr);
                     respuesta.Ok = 1;
-                    respuesta.Data.Add(new
-                    {                 
-                        usersVr.City,
-                        usersVr.PostalCode,
-                        usersVr.Province,
-                        usersVr.State
-                    });
-                   
+                    respuesta.Data.Add(usersVr);
+                    
                     respuesta.Message = "Success";
                 }
             }
