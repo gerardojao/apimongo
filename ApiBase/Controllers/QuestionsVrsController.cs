@@ -29,9 +29,28 @@ namespace ApiBase.Controllers
         }
         // GET: api/<QuestionsVrsController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult> GetAllQuestions()
         {
-            return new string[] { "value1", "value2" };
+            Respuesta<object> respuesta = new Respuesta<object>();
+            try
+            {
+                var users = await _repository.SelectAll<QuestionsVr>();
+                foreach (var item in users)
+                {
+                    if (item.DeletedAt == null)
+                    {
+                        respuesta.Data.Add(item);
+                    }
+                }
+                respuesta.Ok = 1;
+                respuesta.Message = "Success";
+            }
+            catch (Exception e)
+            {
+                respuesta.Ok = 0;
+                respuesta.Message = e.Message + " " + e.InnerException;
+            }
+            return Ok(respuesta);
         }
 
         // GET api/<QuestionsVrsController>/5
@@ -42,7 +61,7 @@ namespace ApiBase.Controllers
             try
             {
                 var question = await _context.QuestionsVrs.FirstOrDefaultAsync(q => q.Id == id);
-                if (question != null && question.DeleteAt == null)
+                if (question != null && question.DeletedAt == null)
                 {
                     respuesta.Data.Add(new
                     {
@@ -77,7 +96,7 @@ namespace ApiBase.Controllers
             Respuesta<object> respuesta = new Respuesta<object>();
             try
             {
-                question.CreateAt = new TimeZoneChecker(_context, _appsettings).DT();
+                question.CreatedAt = new TimeZoneChecker(_context, _appsettings).DT();
                 await _repository.CreateAsync<QuestionsVr>(question);
                 respuesta.Ok = 1;
                 respuesta.Message = "Success";
@@ -100,11 +119,11 @@ namespace ApiBase.Controllers
             try
             {
                 var quest = await _repository.SelectById<QuestionsVr>(id);
-                if (quest != null && quest.DeleteAt == null)
+                if (quest != null && quest.DeletedAt == null)
                 {
                     
                         
-                        quest.UpdateAt = new TimeZoneChecker(_context, _appsettings).DT();
+                        quest.UpdatedAt = new TimeZoneChecker(_context, _appsettings).DT();
                         await _repository.UpdateAsync<QuestionsVr>(quest);
                         respuesta.Ok = 1;
                         respuesta.Message = "Success";
@@ -135,9 +154,9 @@ namespace ApiBase.Controllers
             try
             {
                 var quest = await _repository.SelectById<QuestionsVr>(id);
-                if (quest != null && quest.DeleteAt == null)
+                if (quest != null && quest.DeletedAt == null)
                 {
-                    quest.DeleteAt = new TimeZoneChecker(_context, _appsettings).DT();
+                    quest.DeletedAt = new TimeZoneChecker(_context, _appsettings).DT();
                     await _repository.DeleteAsync<QuestionsVr>(quest);
                     respuesta.Ok = 1;
                     respuesta.Message = "Success";

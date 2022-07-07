@@ -20,6 +20,7 @@ namespace ApiBase.Data
 
         public virtual DbSet<AnswersVr> AnswersVrs { get; set; }
         public virtual DbSet<QuestionsVr> QuestionsVrs { get; set; }
+        
         public virtual DbSet<UsersVr> UsersVrs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -65,14 +66,10 @@ namespace ApiBase.Data
                     .IsUnicode(false);
             });
 
+
             modelBuilder.Entity<UsersVr>(entity =>
             {
                 entity.ToTable("UsersVR");
-
-                entity.Property(e => e.City)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.Email)
                     .IsRequired()
@@ -84,14 +81,24 @@ namespace ApiBase.Data
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.State)
-                    .IsRequired()
+                entity.Property(e => e.VerificationCode)
+                    //.IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+                entity.Property(e => e.City)
+                 .HasMaxLength(50)
+                 .IsUnicode(false);
+
+                entity.Property(e => e.Colony)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.VerificationCode)
-                    .IsRequired()
-                    .HasMaxLength(10)
+                entity.Property(e => e.Province)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.State)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
             });
 
