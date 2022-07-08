@@ -1,4 +1,5 @@
 ﻿using AmstelAPI.Models;
+using AmstelAPI.Utils;
 using ApiBase.Data;
 using ApiBase.Models;
 using ApiBase.Utils;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
@@ -57,37 +59,9 @@ namespace ApiBase.Controllers
             return Ok(respuesta);
         }
 
-        [HttpGet("{Id}")]
-        public async Task<ActionResult> GetUsers18ById(int Id)
-        {
-            Respuesta<object> respuesta = new Respuesta<object>();
-            try
-            {
-                var user = await _context.UsersVrs.Where(u => u.Id == Id).FirstOrDefaultAsync();
-                if (user != null && user.DeletedAt == null)
-                {
-                    respuesta.Data.Add(user);
-                    respuesta.Ok = 1;
-                    respuesta.Message = "Success";
-                }
-                else
-                {
-                    respuesta.Ok = 0;
-                    respuesta.Message = "User not found";
-                }
-            }
-            catch (Exception e)
-            {
-                respuesta.Ok = 0;
-                respuesta.Message = e.Message + " " + e.InnerException;
-            }
-            return Ok(respuesta);
-
-        }
-
         [HttpPost("Register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register(UsersVrRegister userR)
+        public async Task<IActionResult> Register(UsersVr userR)
         {
             Respuesta<object> respuesta = new Respuesta<object>();
             string token = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8);
@@ -97,21 +71,21 @@ namespace ApiBase.Controllers
                 if (user != null)
                 {
                     respuesta.Ok = 0;
-                    respuesta.Message = "El usuario ya está registrado";              
+                    respuesta.Message = "El usuario ya está registrado";
                 }
                 else
                 {
-                    var usersVr = new UsersVr 
-                    {
-                        FullName = userR.Fullname,
-                        Email = UsersConfig.CheckGmail(userR.Email),
-                        CreatedAt = new TimeZoneChecker(_context, _appsettings).DT(),
-                        VerificationCode = token                        
-                    };
-                    await _repository.CreateAsync(usersVr);
+                    userR.CreatedAt = new TimeZoneChecker(_context, _appsettings).DT();
+                    userR.FullName = userR.FirstName + " " + userR.LastName;
+
+                  
+                    var userId = await _repository.CreateAsync(user);
                     respuesta.Ok = 1;
-                    respuesta.Data.Add(usersVr);
-                    
+                    respuesta.Data.Add(new
+                    {
+                        Id = userId
+                    });
+
                     respuesta.Message = "Success";
                 }
             }
@@ -122,11 +96,12 @@ namespace ApiBase.Controllers
             }
             return Ok(respuesta);
         }
+       
 
         [HttpGet]
         [AllowAnonymous]
-        [Route("sepomex")]
-        public async Task<IActionResult> PostalCode()
+        [Route("StateList")]
+        public async Task<IActionResult> GetState()
         {
             Respuesta<object> respuesta = new Respuesta<object>();
             //Conexión a la API
@@ -161,8 +136,8 @@ namespace ApiBase.Controllers
         //Municipio por Estado
         [HttpGet]
         [AllowAnonymous]
-        [Route("sepomex/{state}")]
-        public async Task<IActionResult> State(string state)
+        [Route("MunicipalyList/{state}")]
+        public async Task<IActionResult> GetMunicipalyByState(string state)
         {
             Respuesta<object> respuesta = new Respuesta<object>();
         
@@ -196,33 +171,73 @@ namespace ApiBase.Controllers
         }
 
         //Colonia por Municipio
-        //[HttpGet]
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("ColonyByMunicipaly/{Province}")]
+        public async Task<IActionResult> GetColonyByMunicipaly(string municipaly)
+        {
+            Respuesta<object> respuesta = new Respuesta<object>();
+
+            //Conexión a la API
+            var client = new HttpClient();
+            client.BaseAddress = new Uri("https://api.copomex.com/query/get_colonia_por_municipio" + municipaly + "?token=f9042ad8-6ec0-40c0-bcef-dcbec2ec92f7");
+            try
+            {
+                //Encabezados
+                client.DefaultRequestHeaders.Add("Accept-Type", "application/json");
+
+                var response = await client.GetAsync(client.BaseAddress);
+                //dynamic json = JsonConvert.DeserializeObject(response);
+                response.EnsureSuccessStatusCode();
+                var result = await response.Content.ReadAsByteArrayAsync();
+
+                var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
+
+                var aa = JsonSerializer.Deserialize<dynamic>(result, options);
+
+                respuesta.Ok = 1;
+                respuesta.Data.Add(new { data = aa });
+                respuesta.Message = "Success";
+            }
+            catch (Exception e)
+            {
+                respuesta.Ok = 0;
+                respuesta.Message = e.Message + " " + e.InnerException;
+            }
+            return Ok(respuesta);
+        }
+
+
+
+        //[HttpPost("code")]
         //[AllowAnonymous]
-        //[Route("sepomex/{Province}")]
-        //public async Task<IActionResult> Province(string province)
+        //public async Task<IActionResult> resendCode(UsersVr userR)
         //{
         //    Respuesta<object> respuesta = new Respuesta<object>();
-
-        //    //Conexión a la API
-        //    var client = new HttpClient();
-        //    client.BaseAddress = new Uri("https://api.copomex.com/query/get_colonia_por_municipio" + province + "?token=f9042ad8-6ec0-40c0-bcef-dcbec2ec92f7");
+        //    var _code = awa
         //    try
         //    {
-        //        //Encabezados
-        //        client.DefaultRequestHeaders.Add("Accept-Type", "application/json");
+        //        var user = await _context.UsersVrs.Where(u => u.Email == userR.Email).FirstOrDefaultAsync();
+        //        if (user != null)
+        //        {
+        //            respuesta.Ok = 0;
+        //            respuesta.Message = "El usuario ya está registrado";
+        //        }
+        //        else
+        //        {
+        //            userR.CreatedAt = new TimeZoneChecker(_context, _appsettings).DT();
+        //            userR.FullName = userR.FirstName + " " + userR.LastName;
 
-        //        var response = await client.GetAsync(client.BaseAddress);
-        //        //dynamic json = JsonConvert.DeserializeObject(response);
-        //        response.EnsureSuccessStatusCode();
-        //        var result = await response.Content.ReadAsByteArrayAsync();
 
-        //        var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
+        //            var userId = await _repository.CreateAsync(user);
+        //            respuesta.Ok = 1;
+        //            respuesta.Data.Add(new
+        //            {
+        //                Id = userId
+        //            });
 
-        //        var aa = JsonSerializer.Deserialize<dynamic>(result, options);
-
-        //        respuesta.Ok = 1;
-        //        respuesta.Data.Add(new { data = aa });
-        //        respuesta.Message = "Success";
+        //            respuesta.Message = "Success";
+        //        }
         //    }
         //    catch (Exception e)
         //    {
@@ -232,60 +247,38 @@ namespace ApiBase.Controllers
         //    return Ok(respuesta);
         //}
 
-        [HttpPut("{Id}")]
-        public async Task<ActionResult> PutUserVr(int Id, UsersVr userVr)
+        [HttpGet("verify/{email}")]
+        [AllowAnonymous]
+        // Para desactivar app
+        // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "CREATOR")]
+        public async Task<IActionResult> ConfirmUser(string email, string token)
         {
             Respuesta<object> respuesta = new Respuesta<object>();
             try
             {
-                var u = await _context.UsersVrs.Where(u => u.Id == Id).FirstOrDefaultAsync();
-
-                if (u != null && u.DeletedAt == null)
+                var auxemail = UsersConfig.CheckGmail(email);
+                var user = await _context.UsersVrs.Where(c => c.Email == auxemail).FirstOrDefaultAsync();
+                if (user != null)
                 {
-                    if (userVr.FullName != u.FullName)
-                    { u.FullName = userVr.FullName; }
-                    if (userVr.Email != u.Email)
-                    { u.Email = userVr.Email; }
+                    if (user.VerificationCode == token)
+                    {
+                        var userConfirmed = user.EmailConfirmed;
+                        user.EmailConfirmed = true;
+                        var result = await _repository.VerifyUser(user);
 
-                    u.UpdatedAt = new TimeZoneChecker(_context, _appsettings).DT();
-                    await _repository.UpdateAsync(u);
-                    respuesta.Ok = 1;
-                    respuesta.Message = "Success";
+                        respuesta.Ok = 1;
+                        respuesta.Message = " Email verified";
+                    }
+                    else
+                    {
+                        respuesta.Ok = 0;
+                        respuesta.Message = "Missing Token";
+                    }
                 }
                 else
                 {
                     respuesta.Ok = 0;
-                    respuesta.Message = "User not found";
-                }
-            }
-            catch (Exception e)
-            {
-                respuesta.Ok = 0;
-                respuesta.Message = e.Message + " " + e.InnerException;
-                return Ok(respuesta);
-            }
-            return Ok(respuesta);
-
-        }
-
-        [HttpDelete("{Id}")]
-        public async Task<ActionResult> DeleteUsers18(int Id)
-        {
-            Respuesta<object> respuesta = new Respuesta<object>();
-            try
-            {
-                var user = await _context.UsersVrs.Where(u => u.Id == Id).FirstOrDefaultAsync();
-                if (user != null && user.DeletedAt == null)
-                {
-                    user.DeletedAt = new TimeZoneChecker(_context, _appsettings).DT();
-                    await _repository.DeleteAsync(user);
-                    respuesta.Ok = 1;
-                    respuesta.Message = "Success";
-                }
-                else
-                {
-                    respuesta.Ok = 0;
-                    respuesta.Message = "User not found";
+                    respuesta.Message = "Email not found";
                 }
             }
             catch (Exception e)
@@ -295,24 +288,8 @@ namespace ApiBase.Controllers
             }
             return Ok(respuesta);
         }
-    }
 
-    public class UsersVrRegister
-    {
-        [Required(ErrorMessage = "Fullname is required")]
-        [MaxLength(50)]
-        public string Fullname { get; set; }
-        [Required(ErrorMessage = "Email is required")]
-        [MaxLength(50)]
-        public string Email { get; set; }
     }
-    //public class UpdateModel
-    //{
-    //    public string FullName { get; set; }       
-    //    [EmailAddress]
-    //    public string Email { get; set; }
-       
-    //}
-
+ 
 
 }

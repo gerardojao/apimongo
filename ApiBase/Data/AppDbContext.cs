@@ -78,16 +78,24 @@ namespace ApiBase.Data
 
                 entity.Property(e => e.FullName)
                     .IsRequired()
-                    .HasMaxLength(50)
+                    .HasMaxLength(60)
                     .IsUnicode(false);
+
+                entity.Property(e => e.FirstName)
+                    .IsRequired()
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LastName)
+                  .IsRequired()
+                  .HasMaxLength(30)
+                  .IsUnicode(false);
 
                 entity.Property(e => e.VerificationCode)
                     //.IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
-                entity.Property(e => e.City)
-                 .HasMaxLength(50)
-                 .IsUnicode(false);
+              
 
                 entity.Property(e => e.Colony)
                     .HasMaxLength(50)

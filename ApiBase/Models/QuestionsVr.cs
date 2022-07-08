@@ -15,6 +15,7 @@ namespace ApiBase.Models
         [JsonIgnore]
         public int Id { get; set; }
         public string QuestionDescription { get; set; }
+        public string Status { get; set; }
         [JsonIgnore]
         public DateTime CreatedAt { get; set; }
         [JsonIgnore]

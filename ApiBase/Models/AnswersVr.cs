@@ -11,14 +11,8 @@ namespace ApiBase.Models
         [JsonIgnore]
         public int Id { get; set; }
         public string AnswerDescription { get; set; }
-        public int? QuestionId { get; set; }
-        public int? UserId { get; set; }
-        [JsonIgnore]
-        public DateTime CreatedAt { get; set; }
-        [JsonIgnore]
-        public DateTime? UpdateAt { get; set; }
-        [JsonIgnore]
-        public DateTime? DeleteAt { get; set; }
+        public int QuestionId { get; set; }
+        public int UserId { get; set; }     
         [JsonIgnore]
         public virtual QuestionsVr Question { get; set; }
         [JsonIgnore]

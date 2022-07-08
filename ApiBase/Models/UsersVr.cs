@@ -15,12 +15,14 @@ namespace ApiBase.Models
         }
 
         public int Id { get; set; }
+        [JsonIgnore]
         public string FullName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public string Email { get; set; }
+        public bool EmailConfirmed { get; set; }
         public string VerificationCode { get; set; }
         public string Colony { get; set; }
-        public int PostalCode { get; set; }      
-        public string City { get; set; }      
         public string State { get; set; }  
         public string Province { get; set; }
         [JsonIgnore]

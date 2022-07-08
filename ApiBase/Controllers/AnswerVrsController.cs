@@ -42,19 +42,12 @@ namespace ApiBase.Controllers
                                {
                                    _answer.Id,
                                    _answer.AnswerDescription,                                  
-                                   _answer.CreatedAt,
-                                   _answer.UpdateAt,
-                                   _answer.DeleteAt,
-                                   user = _user.Email,
+                                    user = _user.Email,
                                    question = _question.QuestionDescription
                                }).FirstOrDefaultAsync();
                 if (ans != null)
                 {
-                    if (ans.DeleteAt == null)
-                    {
-                        respuesta.Data.Add(ans);
-                    }
-
+                    respuesta.Data.Add(ans);
                     respuesta.Ok = 1;
                     respuesta.Message = "Answer found";
                 }
@@ -72,35 +65,16 @@ namespace ApiBase.Controllers
             return Ok(respuesta);
         }
 
-        [HttpPut("{id}")]
+        [HttpPost]
 
-        public async Task<ActionResult> UpdateANswer(int id, AnswersVr answer)
+        public async Task<ActionResult> PostAnswer(AnswersVr answer)
         {
             Respuesta<object> respuesta = new Respuesta<object>();
             try
             {
-                var ans = await _context.AnswersVrs.Where(a => a.Id == id).FirstOrDefaultAsync();
-                if (ans != null && ans.DeleteAt == null)
-                {
-                    if (answer.AnswerDescription != ans.AnswerDescription)
-                    { ans.AnswerDescription = answer.AnswerDescription; }
-                    if (answer.UserId != ans.UserId)
-                    { ans.UserId = answer.UserId; }
-                    if (answer.QuestionId != ans.QuestionId)
-                    { ans.QuestionId = answer.QuestionId; }
-
-                    ans.UpdateAt = new TimeZoneChecker(_context, _appsettings).DT();
-                    await _repository.UpdateAsync(ans);
-                    respuesta.Ok = 1;
-                    respuesta.Message = " Answer updated Successfully";
-                }
-
-                else
-                {
-                    respuesta.Ok = 0;
-                    respuesta.Message = "Answer not found";
-                    return Ok(respuesta);
-                }
+                await _repository.CreateAsync(answer);
+                respuesta.Ok = 1;
+                respuesta.Message = "Success";
             }
             catch (Exception e)
             {
@@ -111,34 +85,6 @@ namespace ApiBase.Controllers
             return Ok(respuesta);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteAnswer(int id)
-        {
-            Respuesta<object> respuesta = new Respuesta<object>();
-            try
-            {
-                var ans = await _repository.SelectById<AnswersVr>(id);
-                if (ans != null && ans.DeleteAt == null)
-                {
-                    ans.DeleteAt = new TimeZoneChecker(_context, _appsettings).DT();
-                    await _repository.DeleteAsync(ans);
-                    respuesta.Ok = 1;
-                    respuesta.Message = "Deleted Successfully";
-                }
-                else
-                {
-                    respuesta.Ok = 0;
-                    respuesta.Message = "Answer not found";
-                    return Ok(respuesta);
-                }
-            }
-            catch (Exception e)
-            {
-                respuesta.Ok = 0;
-                respuesta.Message = e.Message + " " + e.InnerException;
-                return Ok(respuesta);
-            }
-            return Ok(respuesta);
-        }
+
     }
 }
