@@ -82,17 +82,17 @@ namespace ApiBase.Data
                     .IsUnicode(false);
 
                 entity.Property(e => e.FirstName)
-                    .IsRequired()
+                    //.IsRequired()
                     .HasMaxLength(30)
                     .IsUnicode(false);
 
                 entity.Property(e => e.LastName)
-                  .IsRequired()
+                  //.IsRequired()
                   .HasMaxLength(30)
                   .IsUnicode(false);
 
-                entity.Property(e => e.VerificationCode)
-                    //.IsRequired()
+               entity.Property(e => e.VerificationCode)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
               

@@ -59,6 +59,39 @@ namespace ApiBase.Controllers
             return Ok(respuesta);
         }
 
+        //GET api/<QuestionsVrsController>/5
+        [HttpGet("GetCode/{email}")]
+        public async Task<ActionResult> GetCode(string email)
+        {
+            Respuesta<object> respuesta = new Respuesta<object>();
+            try
+            {
+                var user = await _context.UsersVrs.FirstOrDefaultAsync(u => u.Email == email);
+                if (user != null && user.DeletedAt == null)
+                {
+                    respuesta.Data.Add(new
+                    {
+                        user.VerificationCode
+                     });
+                    respuesta.Ok = 1;
+                    respuesta.Message = "Success";
+                }
+                else
+                {
+                    respuesta.Ok = 0;
+                    respuesta.Message = "user not found";
+                    return Ok(respuesta);
+                }
+            }
+            catch (Exception e)
+            {
+                respuesta.Ok = 0;
+                respuesta.Message = e.Message + " " + e.InnerException;
+                return Ok(respuesta);
+            }
+            return Ok(respuesta);
+        }
+
         [HttpPost("Register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register(UsersVr userR)
@@ -173,14 +206,14 @@ namespace ApiBase.Controllers
         //Colonia por Municipio
         [HttpGet]
         [AllowAnonymous]
-        [Route("ColonyByMunicipaly/{Province}")]
+        [Route("ColonyByMunicipaly/{municipaly}")]
         public async Task<IActionResult> GetColonyByMunicipaly(string municipaly)
         {
             Respuesta<object> respuesta = new Respuesta<object>();
 
             //Conexión a la API
             var client = new HttpClient();
-            client.BaseAddress = new Uri("https://api.copomex.com/query/get_colonia_por_municipio" + municipaly + "?token=f9042ad8-6ec0-40c0-bcef-dcbec2ec92f7");
+            client.BaseAddress = new Uri("https://api.copomex.com/query/get_colonia_por_municipio/" + municipaly + "?token=f9042ad8-6ec0-40c0-bcef-dcbec2ec92f7");
             try
             {
                 //Encabezados
