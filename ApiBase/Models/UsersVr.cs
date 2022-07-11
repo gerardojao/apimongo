@@ -21,7 +21,7 @@ namespace ApiBase.Models
         public string? LastName { get; set; }
         public string Email { get; set; }
         public bool? EmailConfirmed { get; set; }
-        public string VerificationCode { get; set; }
+        public string? VerificationCode { get; set; }
         public string? Colony { get; set; }
         public string? State { get; set; }  
         public string? Province { get; set; }

@@ -5,9 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Templates\" />
     <Folder Include="Procedures\" />
-    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Templates\PassRecoveryTemplate.html" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0" />

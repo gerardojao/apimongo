@@ -92,7 +92,7 @@ namespace ApiBase.Data
                   .IsUnicode(false);
 
                entity.Property(e => e.VerificationCode)
-                    .IsRequired()
+                    //.IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
               

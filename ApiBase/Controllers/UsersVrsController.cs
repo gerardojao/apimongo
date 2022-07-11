@@ -4,6 +4,7 @@ using ApiBase.Data;
 using ApiBase.Models;
 using ApiBase.Utils;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -26,12 +27,15 @@ namespace ApiBase.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IRepository _repository;
+        private readonly IWebHostEnvironment _env;
+
         private readonly IConfiguration _appsettings;
-        public UsersVrsController(IConfiguration appsettings, AppDbContext context, IRepository repository)
+        public UsersVrsController(IWebHostEnvironment env, IConfiguration appsettings, AppDbContext context, IRepository repository)
         {
             _context = context;
             _repository = repository;
             _appsettings = appsettings;
+            _env = env;
         }
         // GET: api/<UsersVrsController>
         [HttpGet]
@@ -110,9 +114,9 @@ namespace ApiBase.Controllers
                 {
                     userR.CreatedAt = new TimeZoneChecker(_context, _appsettings).DT();
                     userR.FullName = userR.FirstName + " " + userR.LastName;
+                    userR.VerificationCode = token;
 
-                  
-                    var userId = await _repository.CreateAsync(user);
+                    var userId = await _repository.CreateAsync(userR);
                     respuesta.Ok = 1;
                     respuesta.Data.Add(new
                     {
@@ -129,7 +133,7 @@ namespace ApiBase.Controllers
             }
             return Ok(respuesta);
         }
-       
+
 
         [HttpGet]
         [AllowAnonymous]
@@ -321,6 +325,68 @@ namespace ApiBase.Controllers
             }
             return Ok(respuesta);
         }
+
+        private async Task<Boolean> SendEmail(UsersVr user, string code, string fileName, string asunto)
+        {
+            var baseUrl = (Request.IsHttps) ? "https://" + this.Request.Host : "http://" + this.Request.Host;
+            Dictionary<string, string> tags = new Dictionary<string, string>(); // Create tags for email template.
+            tags.Add("[[DOMAIN]]", "Dominio");
+            tags.Add("[[BASEURL]]", baseUrl);
+            tags.Add("[[CODE]]", code);
+            tags.Add("[[RETURN_LINK]]", this._appsettings["SendGrid:APP_HOST"]);
+            var webRoot = _env.WebRootPath;
+            var pathToFile = _env.WebRootPath
+                + Path.DirectorySeparatorChar.ToString()
+                + "template"
+                + Path.DirectorySeparatorChar.ToString()
+                + fileName;
+
+            string htmlBody = HTMLTemplateHelper.parseFromFile(pathToFile, tags);
+           
+            var response = await EmailMessage.SendEmail(
+                this._appsettings["SendGrid:API_KEY"],
+                this._appsettings["SendGrid:Email"],
+                this._appsettings["SendGrid:Name"],
+                user.Email, asunto, htmlBody);
+          
+            return response;
+        }
+
+        [HttpPost("SendCode")]
+        [AllowAnonymous]
+        // Para desactivar app
+        // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "CREATOR")]
+        public async Task<IActionResult> SendCode(RecoveryForm userForm)
+        {
+            Respuesta<object> respuesta = new Respuesta<object>();
+            try
+            {
+                var user = await _context.UsersVrs.Where(u => u.Email == userForm.Email).FirstOrDefaultAsync();
+                String code = user.VerificationCode;
+              
+                var response = await SendEmail(user, code, "PassRecoveryTemplate.html", "Send Code");
+                if (response)
+                {
+                    respuesta.Ok = 1;           
+                    respuesta.Message = "Success";
+                }
+            }
+            catch (Exception e)
+            {
+                respuesta.Ok = 0;
+              
+                respuesta.Message = e.Message + " " + e.InnerException;
+                
+            }
+            return Ok(respuesta);
+        }
+
+        public class RecoveryForm
+        {
+            public string Email { get; set; }
+        }
+
+
 
     }
  
