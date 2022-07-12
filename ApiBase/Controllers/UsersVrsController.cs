@@ -1,8 +1,6 @@
-﻿using AmstelAPI.Models;
-using AmstelAPI.Utils;
-using ApiBase.Data;
-using ApiBase.Models;
+﻿using ApiBase.Models;
 using ApiBase.Utils;
+using ApiBase.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -101,7 +99,7 @@ namespace ApiBase.Controllers
         public async Task<IActionResult> Register(UsersVr userR)
         {
             Respuesta<object> respuesta = new Respuesta<object>();
-            string token = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8);
+            string token = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
             try
             {
                 var user = await _context.UsersVrs.Where(u => u.Email == userR.Email).FirstOrDefaultAsync();
@@ -117,6 +115,7 @@ namespace ApiBase.Controllers
                     userR.VerificationCode = token;
 
                     var userId = await _repository.CreateAsync(userR);
+                    var response = await SendEmail(userR, "VerificationCodeTemplate.html", "Código de verificación");
                     respuesta.Ok = 1;
                     respuesta.Data.Add(new
                     {
@@ -326,13 +325,13 @@ namespace ApiBase.Controllers
             return Ok(respuesta);
         }
 
-        private async Task<Boolean> SendEmail(UsersVr user, string code, string fileName, string asunto)
+        private async Task<Boolean> SendEmail(UsersVr user, string fileName, string asunto)
         {
             var baseUrl = (Request.IsHttps) ? "https://" + this.Request.Host : "http://" + this.Request.Host;
             Dictionary<string, string> tags = new Dictionary<string, string>(); // Create tags for email template.
             tags.Add("[[DOMAIN]]", "Dominio");
             tags.Add("[[BASEURL]]", baseUrl);
-            tags.Add("[[CODE]]", code);
+            tags.Add("[[CODE]]", user.VerificationCode);
             tags.Add("[[RETURN_LINK]]", this._appsettings["SendGrid:APP_HOST"]);
             var webRoot = _env.WebRootPath;
             var pathToFile = _env.WebRootPath
@@ -352,19 +351,19 @@ namespace ApiBase.Controllers
             return response;
         }
 
-        [HttpPost("SendCode")]
+        [HttpPost("RecoverCode")]
         [AllowAnonymous]
         // Para desactivar app
         // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "CREATOR")]
-        public async Task<IActionResult> SendCode(RecoveryForm userForm)
+        public async Task<IActionResult> RecoverCode(string email)
         {
             Respuesta<object> respuesta = new Respuesta<object>();
             try
             {
-                var user = await _context.UsersVrs.Where(u => u.Email == userForm.Email).FirstOrDefaultAsync();
+                var user = await _context.UsersVrs.Where(u => u.Email == email).FirstOrDefaultAsync();
                 String code = user.VerificationCode;
               
-                var response = await SendEmail(user, code, "PassRecoveryTemplate.html", "Send Code");
+                var response = await SendEmail(user, "PassRecoveryTemplate.html", "Recuperación del código de verificación");
                 if (response)
                 {
                     respuesta.Ok = 1;           

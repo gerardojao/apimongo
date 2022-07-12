@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
 
-namespace AmstelAPI.Utils
+namespace ApiBase.Utils
 {
     class HTMLTemplateHelper
     {//Getting PDF 

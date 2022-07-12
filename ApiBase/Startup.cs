@@ -53,7 +53,7 @@ namespace ApiBase
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "AmstelAPI", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiBase", Version = "v1" });
                 //c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 //{
                 //    Name = "Authorization",
