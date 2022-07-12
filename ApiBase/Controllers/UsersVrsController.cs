@@ -1,6 +1,4 @@
-﻿using AmstelAPI.Models;
-using AmstelAPI.Utils;
-using ApiBase.Data;
+﻿using ApiBase.Data;
 using ApiBase.Models;
 using ApiBase.Utils;
 using Microsoft.AspNetCore.Authorization;
@@ -117,13 +115,19 @@ namespace ApiBase.Controllers
                     userR.VerificationCode = token;
 
                     var userId = await _repository.CreateAsync(userR);
-                    respuesta.Ok = 1;
-                    respuesta.Data.Add(new
+                    var response = await SendEmail(userR, token, "PassRecoveryTemplate.html", "Your Verifycation Code");
+                    if (response)
                     {
-                        Id = userId
-                    });
+                        respuesta.Ok = 1;
+                        respuesta.Data.Add(new
+                            {
+                                Id = userId
+                            });
 
                     respuesta.Message = "Success";
+                       
+                    }
+                   
                 }
             }
             catch (Exception e)
@@ -299,7 +303,7 @@ namespace ApiBase.Controllers
             var webRoot = _env.WebRootPath;
             var pathToFile = _env.WebRootPath
                 + Path.DirectorySeparatorChar.ToString()
-                + "template"
+                + "templates"
                 + Path.DirectorySeparatorChar.ToString()
                 + fileName;
 

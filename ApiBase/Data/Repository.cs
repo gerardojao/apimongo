@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AmstelAPI.Models;
 using ApiBase.Controllers;
 using ApiBase.Models;
 using Microsoft.AspNetCore.Mvc;

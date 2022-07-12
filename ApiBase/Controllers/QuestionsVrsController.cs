@@ -1,5 +1,4 @@
-﻿using AmstelAPI.Models;
-using ApiBase.Data;
+﻿using ApiBase.Data;
 using ApiBase.Models;
 using ApiBase.Utils;
 using Microsoft.AspNetCore.Mvc;

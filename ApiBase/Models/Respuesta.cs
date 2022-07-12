@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace AmstelAPI.Models
+namespace ApiBase.Models
 {
     public class Respuesta<T>
     {

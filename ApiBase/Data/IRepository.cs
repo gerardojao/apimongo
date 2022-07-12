@@ -1,4 +1,3 @@
-using AmstelAPI.Models;
 using ApiBase.Controllers;
 using ApiBase.Models;
 using System.Collections.Generic;
