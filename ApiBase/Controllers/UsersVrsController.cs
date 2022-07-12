@@ -295,7 +295,7 @@ namespace ApiBase.Controllers
             var webRoot = _env.WebRootPath;
             var pathToFile = _env.WebRootPath
                 + Path.DirectorySeparatorChar.ToString()
-                + "templates"
+                + "template"
                 + Path.DirectorySeparatorChar.ToString()
                 + fileName;
 
@@ -320,9 +320,8 @@ namespace ApiBase.Controllers
             try
             {
                 var user = await _context.UsersVrs.Where(u => u.Email == email).FirstOrDefaultAsync();
-                String code = user.VerificationCode;
               
-                var response = await SendEmail(user, "PassRecoveryTemplate.html", "Recuperación del código de verificación");
+                var response = await SendEmail(user, "VerificationCodeTemplate.html", "Recuperación del código de verificación");
                 if (response)
                 {
                     respuesta.Ok = 1;           
