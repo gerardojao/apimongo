@@ -119,10 +119,16 @@ namespace ApiBase.Controllers
                     respuesta.Ok = 1;
                     respuesta.Data.Add(new
                     {
-                        Id = userId
-                    });
+                        respuesta.Ok = 1;
+                        respuesta.Data.Add(new
+                            {
+                                Id = userId
+                            });
 
                     respuesta.Message = "Success";
+                       
+                    }
+                   
                 }
             }
             catch (Exception e)
@@ -245,44 +251,6 @@ namespace ApiBase.Controllers
 
 
 
-        //[HttpPost("code")]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> resendCode(UsersVr userR)
-        //{
-        //    Respuesta<object> respuesta = new Respuesta<object>();
-        //    var _code = awa
-        //    try
-        //    {
-        //        var user = await _context.UsersVrs.Where(u => u.Email == userR.Email).FirstOrDefaultAsync();
-        //        if (user != null)
-        //        {
-        //            respuesta.Ok = 0;
-        //            respuesta.Message = "El usuario ya está registrado";
-        //        }
-        //        else
-        //        {
-        //            userR.CreatedAt = new TimeZoneChecker(_context, _appsettings).DT();
-        //            userR.FullName = userR.FirstName + " " + userR.LastName;
-
-
-        //            var userId = await _repository.CreateAsync(user);
-        //            respuesta.Ok = 1;
-        //            respuesta.Data.Add(new
-        //            {
-        //                Id = userId
-        //            });
-
-        //            respuesta.Message = "Success";
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        respuesta.Ok = 0;
-        //        respuesta.Message = e.Message + " " + e.InnerException;
-        //    }
-        //    return Ok(respuesta);
-        //}
-
         [HttpGet("verify/{email}")]
         [AllowAnonymous]
         // Para desactivar app
@@ -336,7 +304,7 @@ namespace ApiBase.Controllers
             var webRoot = _env.WebRootPath;
             var pathToFile = _env.WebRootPath
                 + Path.DirectorySeparatorChar.ToString()
-                + "template"
+                + "templates"
                 + Path.DirectorySeparatorChar.ToString()
                 + fileName;
 

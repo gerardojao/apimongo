@@ -20,7 +20,9 @@ namespace ApiBase.Data
 
         public virtual DbSet<AnswersVr> AnswersVrs { get; set; }
         public virtual DbSet<QuestionsVr> QuestionsVrs { get; set; }
-        
+        public virtual DbSet<Action1> Action1 { get; set; }
+        public virtual DbSet<Action2> Action2 { get; set; }
+        public virtual DbSet<Action3> Action3 { get; set; }
         public virtual DbSet<UsersVr> UsersVrs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -56,6 +58,8 @@ namespace ApiBase.Data
                     .HasConstraintName("FK_AnswersVR_UsersVR");
             });
 
+           
+
             modelBuilder.Entity<QuestionsVr>(entity =>
             {
                 entity.ToTable("QuestionsVR");
@@ -64,6 +68,20 @@ namespace ApiBase.Data
                     .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
+            });
+            modelBuilder.Entity<Action1>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+            });
+
+            modelBuilder.Entity<Action2>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+            });
+
+            modelBuilder.Entity<Action3>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
             });
 
 
