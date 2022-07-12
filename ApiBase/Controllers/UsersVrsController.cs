@@ -116,19 +116,16 @@ namespace ApiBase.Controllers
 
                     var userId = await _repository.CreateAsync(userR);
                     var response = await SendEmail(userR, "VerificationCodeTemplate.html", "Código de verificación");
-                    respuesta.Ok = 1;
-                    respuesta.Data.Add(new
+                   
+                    if(response)
                     {
                         respuesta.Ok = 1;
                         respuesta.Data.Add(new
                             {
                                 Id = userId
                             });
-
                     respuesta.Message = "Success";
-                       
-                    }
-                   
+                    }                   
                 }
             }
             catch (Exception e)
@@ -139,10 +136,8 @@ namespace ApiBase.Controllers
             return Ok(respuesta);
         }
 
-
-        [HttpGet]
+        [HttpGet("StateList")]
         [AllowAnonymous]
-        [Route("StateList")]
         public async Task<IActionResult> GetState()
         {
             Respuesta<object> respuesta = new Respuesta<object>();
@@ -176,9 +171,8 @@ namespace ApiBase.Controllers
         }
 
         //Municipio por Estado
-        [HttpGet]
+        [HttpGet("MunicipalyList/{state}")]
         [AllowAnonymous]
-        [Route("MunicipalyList/{state}")]
         public async Task<IActionResult> GetMunicipalyByState(string state)
         {
             Respuesta<object> respuesta = new Respuesta<object>();
@@ -213,9 +207,8 @@ namespace ApiBase.Controllers
         }
 
         //Colonia por Municipio
-        [HttpGet]
+        [HttpGet("ColonyByMunicipaly/{municipaly}")]
         [AllowAnonymous]
-        [Route("ColonyByMunicipaly/{municipaly}")]
         public async Task<IActionResult> GetColonyByMunicipaly(string municipaly)
         {
             Respuesta<object> respuesta = new Respuesta<object>();
@@ -248,8 +241,6 @@ namespace ApiBase.Controllers
             }
             return Ok(respuesta);
         }
-
-
 
         [HttpGet("verify/{email}")]
         [AllowAnonymous]
@@ -347,15 +338,5 @@ namespace ApiBase.Controllers
             }
             return Ok(respuesta);
         }
-
-        public class RecoveryForm
-        {
-            public string Email { get; set; }
-        }
-
-
-
     }
- 
-
 }
