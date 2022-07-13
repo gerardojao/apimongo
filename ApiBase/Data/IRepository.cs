@@ -16,7 +16,7 @@ namespace ApiBase.Data
         Task UpdateAsync<T>(T entity) where T : class;
         Task<List<T>> SelectByRange<T>(int pageNumber, int pagSize) where T : class;
         Task <bool> CreateUser(UsersVr user);
-        Task<bool> VerifyUser(UsersVr user);        
+        Task VerifyUser(UsersVr user);        
         //Task UpdateUserAsync(UsersVr u, UserVrLocation ua, UserVrUpdateModel uu);
         //Task UpdateUserRegisterAsync(UsersVr u, UserVrUpdateModel uu);      
         //Task UpdateUserProfileAsync(UsersVr user, UserVrLocation userAdd, UpdateModel userModel);

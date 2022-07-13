@@ -78,11 +78,10 @@ namespace ApiBase.Data
             return created > 0;
         }
 
-        public async Task<bool> VerifyUser(UsersVr entity)
+        public async Task VerifyUser(UsersVr entity)
         {
             this._dbContext.Set<UsersVr>().Update(entity);
             var created = await this._dbContext.SaveChangesAsync();
-            return created > 0;
         }
 
         //public async Task UpdateUserRegisterAsync(UsersVr u, UserVrUpdateModel uu)

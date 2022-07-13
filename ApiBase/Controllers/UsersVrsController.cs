@@ -102,6 +102,7 @@ namespace ApiBase.Controllers
             string token = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
             try
             {
+                userR.Email = UsersConfig.CheckGmail(userR.Email);
                 var user = await _context.UsersVrs.Where(u => u.Email == userR.Email).FirstOrDefaultAsync();
                 if (user != null)
                 {
@@ -255,19 +256,27 @@ namespace ApiBase.Controllers
                 var user = await _context.UsersVrs.Where(c => c.Email == auxemail).FirstOrDefaultAsync();
                 if (user != null)
                 {
-                    if (user.VerificationCode == token)
+                    if (user.EmailConfirmed == false)
                     {
-                        var userConfirmed = user.EmailConfirmed;
-                        user.EmailConfirmed = true;
-                        var result = await _repository.VerifyUser(user);
+                        if (user.VerificationCode == token)
+                        {
+                            var userConfirmed = user.EmailConfirmed;
+                            user.EmailConfirmed = true;
+                            await _repository.VerifyUser(user);
 
-                        respuesta.Ok = 1;
-                        respuesta.Message = " Email verified";
+                            respuesta.Ok = 1;
+                            respuesta.Message = " Email verified";
+                        }
+                        else
+                        {
+                            respuesta.Ok = 0;
+                            respuesta.Message = "Missing Token";
+                        }
                     }
                     else
                     {
                         respuesta.Ok = 0;
-                        respuesta.Message = "Missing Token";
+                        respuesta.Message = "Email already confirmed";
                     }
                 }
                 else
