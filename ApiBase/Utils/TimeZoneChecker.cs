@@ -73,10 +73,10 @@ namespace ApiBase.Utils
         public DateTime UtcToServerTime(DateTime time)
         {
             TimeZoneInfo localZone = TimeZoneInfo.Local;
-            TimeSpan currentOffset = localZone.GetUtcOffset( time );
+            TimeSpan currentOffset = localZone.GetUtcOffset(time);
 
-            if ( Convert.ToInt32(_configuration["ServerSettings:GMTLocal"]) == currentOffset.Hours) return time;
-        
+            if (Convert.ToInt32(_configuration["ServerSettings:GMTLocal"]) == currentOffset.Hours) return time;
+
             return time.AddHours(Convert.ToDouble(_configuration["ServerSettings:GMTLocal"]));
         }
 
@@ -84,14 +84,14 @@ namespace ApiBase.Utils
         {
 
             DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            TimeSpan span = (time-epoch);
-            return (long) span.TotalSeconds;
+            TimeSpan span = (time - epoch);
+            return (long)span.TotalSeconds;
         }
 
         public static DateTime UnixToUTCDateTime(long time)
         {
             return new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(time);
-        }        
+        }
 
         public enum Centro : int
         {
@@ -120,10 +120,10 @@ namespace ApiBase.Utils
             Veracruz = 30,
             Yucatan = 31,
             Zacatecas = 32
-            
+
         }
 
-        public enum Pacifico : int 
+        public enum Pacifico : int
         {
             BajaCaliforniaSur = 3,
             Chihuahua = 8,

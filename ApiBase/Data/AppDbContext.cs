@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using ApiBase.Models;
 
-#nullable disable
+// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
+// If you have enabled NRTs for your project, then un-comment the following line:
+// #nullable disable
 
 namespace ApiBase.Data
 {
@@ -18,113 +20,45 @@ namespace ApiBase.Data
         {
         }
 
-        public virtual DbSet<AnswersVr> AnswersVrs { get; set; }
-        public virtual DbSet<QuestionsVr> QuestionsVrs { get; set; }
-        public virtual DbSet<Action1> Action1 { get; set; }
-        public virtual DbSet<Action2> Action2 { get; set; }
-        public virtual DbSet<Action3> Action3 { get; set; }
-        public virtual DbSet<UsersVr> UsersVrs { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("server=tcp:db-amstel.database.windows.net;database=Int-db-amstel;persist security info=True;user id=Adminamstel;password=A4#t3q@lt2;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=(localdb)\\serverfirst;Database=ApiLogin;Integrated Security=true");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
-
-            modelBuilder.Entity<AnswersVr>(entity =>
+            modelBuilder.Entity<Users>(entity =>
             {
-                entity.ToTable("AnswersVR");
+                entity.ToTable("users");
 
-                entity.Property(e => e.AnswerDescription)
+               entity.Property(e => e.LastName)
                     .IsRequired()
-                    .HasMaxLength(200)
+                    .HasMaxLength(20)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.Question)
-                    .WithMany(p => p.AnswersVrs)
-                    .HasForeignKey(d => d.QuestionId)
-                    .HasConstraintName("FK_AnswersVR_QuestionsVR");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.AnswersVrs)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_AnswersVR_UsersVR");
-            });
-
-           
-
-            modelBuilder.Entity<QuestionsVr>(entity =>
-            {
-                entity.ToTable("QuestionsVR");
-
-                entity.Property(e => e.QuestionDescription)
-                    .IsRequired()
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-            });
-            modelBuilder.Entity<Action1>(entity =>
-            {
-                entity.Property(e => e.Id).HasColumnName("id");
-            });
-
-            modelBuilder.Entity<Action2>(entity =>
-            {
-                entity.Property(e => e.Id).HasColumnName("id");
-            });
-
-            modelBuilder.Entity<Action3>(entity =>
-            {
-                entity.Property(e => e.Id).HasColumnName("id");
-            });
-
-
-            modelBuilder.Entity<UsersVr>(entity =>
-            {
-                entity.ToTable("UsersVR");
 
                 entity.Property(e => e.Email)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.FullName)
-                    .IsRequired()
-                    .HasMaxLength(60)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.FirstName)
-                    //.IsRequired()
-                    .HasMaxLength(30)
+                    .IsRequired()
+                    .HasMaxLength(20)
                     .IsUnicode(false);
 
-                entity.Property(e => e.LastName)
-                  //.IsRequired()
-                  .HasMaxLength(30)
-                  .IsUnicode(false);
-
-               entity.Property(e => e.VerificationCode)
-                    //.IsRequired()
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-              
-
-                entity.Property(e => e.Colony)
-                    .HasMaxLength(50)
+                entity.Property(e => e.Password)
+                    .HasMaxLength(150)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Province)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.State)
-                    .HasMaxLength(50)
+                entity.Property(e => e.Username)
+                    .IsRequired()
+                    .HasMaxLength(20)
                     .IsUnicode(false);
             });
 

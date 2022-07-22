@@ -32,7 +32,7 @@ namespace ApiBase
         public void ConfigureServices(IServiceCollection services)
         {
             //DbContext configuration
-            services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("defaultConnectionDev"),
+            services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("dBConnectionDev"),
            sqlServerOptionsAction: sqlOptions => {
                sqlOptions.EnableRetryOnFailure(
                    maxRetryCount: 10,

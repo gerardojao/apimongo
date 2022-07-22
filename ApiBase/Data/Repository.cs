@@ -71,20 +71,7 @@ namespace ApiBase.Data
         }
 
 
-        public async Task<bool> CreateUser(UsersVr entity)
-        {
-            this._dbContext.Set<UsersVr>().Add(entity);
-            var created = await this._dbContext.SaveChangesAsync();
-            return created > 0;
-        }
-
-        public async Task VerifyUser(UsersVr entity)
-        {
-            this._dbContext.Set<UsersVr>().Update(entity);
-            var created = await this._dbContext.SaveChangesAsync();
-        }
-
-        //public async Task UpdateUserRegisterAsync(UsersVr u, UserVrUpdateModel uu)
+    //public async Task UpdateUserRegisterAsync(UsersVr u, UserVrUpdateModel uu)
         //{
         //    if (uu.FullName != null)
         //    { u.FullName = uu.FullName; }
