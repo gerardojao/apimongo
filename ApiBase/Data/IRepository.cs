@@ -1,7 +1,4 @@
-using ApiBase.Models;
-using ApiBase.Controllers;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ApiBase.Data
@@ -15,10 +12,6 @@ namespace ApiBase.Data
         Task DeleteAsync<T>(T entity) where T : class;  
         Task UpdateAsync<T>(T entity) where T : class;
         Task<List<T>> SelectByRange<T>(int pageNumber, int pagSize) where T : class;
-        //Task <bool> CreateUser(Users user);
-           
-        //Task UpdateUserAsync(UsersVr u, UserVrLocation ua, UserVrUpdateModel uu);
-        //Task UpdateUserRegisterAsync(UsersVr u, UserVrUpdateModel uu);      
-        //Task UpdateUserProfileAsync(UsersVr user, UserVrLocation userAdd, UpdateModel userModel);
+      
     }
 }

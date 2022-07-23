@@ -1,21 +1,13 @@
 ﻿using ApiBase.Models;
-using ApiBase.Utils;
 using ApiBase.Data;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using ApiBase.Utils;
 
 namespace ApiBase.Controllers
 {
@@ -25,15 +17,12 @@ namespace ApiBase.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IRepository _repository;
-        private readonly IWebHostEnvironment _env;
-
-        private readonly IConfiguration _appsettings;
+     
         public UsersController(IWebHostEnvironment env, IConfiguration appsettings, AppDbContext context, IRepository repository)
         {
             _context = context;
             _repository = repository;
-            _appsettings = appsettings;
-            _env = env;
+          
         }
         // GET: api/<UsersController>
         [HttpGet]
@@ -111,7 +100,7 @@ namespace ApiBase.Controllers
           
             try
             {
-                //userR.Email = UsersConfig.CheckGmail(userR.Email);
+                userR.Email = UsersConfig.CheckGmail(userR.Email);
                 Users user = await _context.Users.Where(u => u.Email == userR.Email).FirstOrDefaultAsync();
                 if (user != null)
                 {
@@ -206,126 +195,6 @@ namespace ApiBase.Controllers
             }
             return Ok(respuesta);
         }
-        //public ActionResult Delete(int id)
-        //{
-        //    try
-        //    {
-        //        Users users = _context.Users.FirstOrDefault(u => u.Id == id);
-        //        if (users != null)
-        //        {
-        //             users.DeletedAt = new TimeZoneChecker(_context, _appsettings).DT();
-        //            _context.Update(users);
-        //            _context.SaveChanges();
-        //            return Ok();
-        //        }
-        //        else
-        //        {
-        //            return BadRequest();
-        //        }
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
-        //[HttpGet("verify/{email}")]
-        //[AllowAnonymous]
-        //// Para desactivar app
-        //// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "CREATOR")]
-        //public async Task<IActionResult> ConfirmUser(string email, string token)
-        //{
-        //    Respuesta<object> respuesta = new Respuesta<object>();
-        //    try
-        //    {
-        //        var auxemail = UsersConfig.CheckGmail(email);
-        //        var user = await _context.Users.Where(c => c.Email == auxemail).FirstOrDefaultAsync();
-        //        if (user != null)
-        //        {
-        //            if (user.EmailConfirmed == false)
-        //            {
-
-        //                    var userConfirmed = user.EmailConfirmed;
-        //                    user.EmailConfirmed = true;
-        //                    await _repository.VerifyUser(user);
-
-        //                    respuesta.Ok = 1;
-        //                    respuesta.Message = " Email verified";
-
-        //            }
-        //            else
-        //            {
-        //                respuesta.Ok = 0;
-        //                respuesta.Message = "Email already confirmed";
-        //            }
-        //        }
-        //        else
-        //        {
-        //            respuesta.Ok = 0;
-        //            respuesta.Message = "Email not found";
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        respuesta.Ok = 0;
-        //        respuesta.Message = e.Message + " " + e.InnerException;
-        //    }
-        //    return Ok(respuesta);
-        //}
-
-        //private async Task<Boolean> SendEmail(UsersVr user, string fileName, string asunto)
-        //{
-        //    var baseUrl = (Request.IsHttps) ? "https://" + this.Request.Host : "http://" + this.Request.Host;
-        //    Dictionary<string, string> tags = new Dictionary<string, string>(); // Create tags for email template.
-        //    tags.Add("[[DOMAIN]]", "Dominio");
-        //    tags.Add("[[BASEURL]]", baseUrl);
-        //    tags.Add("[[CODE]]", user.VerificationCode);
-        //    tags.Add("[[RETURN_LINK]]", this._appsettings["SendGrid:APP_HOST"]);
-        //    var webRoot = _env.WebRootPath;
-        //    var pathToFile = _env.WebRootPath
-        //        + Path.DirectorySeparatorChar.ToString()
-        //        + "template"
-        //        + Path.DirectorySeparatorChar.ToString()
-        //        + fileName;
-
-        //    string htmlBody = HTMLTemplateHelper.parseFromFile(pathToFile, tags);
-
-        //    var response = await EmailMessage.SendEmail(
-        //        this._appsettings["SendGrid:API_KEY"],
-        //        this._appsettings["SendGrid:Email"],
-        //        this._appsettings["SendGrid:Name"],
-        //        user.Email, asunto, htmlBody);
-
-        //    return response;
-        //}
-
-        //[HttpPost("RecoverCode")]
-        //[AllowAnonymous]
-        //// Para desactivar app
-        //// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "CREATOR")]
-        //public async Task<IActionResult> RecoverCode(string email)
-        //{
-        //    Respuesta<object> respuesta = new Respuesta<object>();
-        //    try
-        //    {
-        //        var user = await _context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
-
-        //        var response = await SendEmail(user, "VerificationCodeTemplate.html", "Recuperación del código de verificación");
-        //        if (response)
-        //        {
-        //            respuesta.Ok = 1;           
-        //            respuesta.Message = "Success";
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        respuesta.Ok = 0;
-
-        //        respuesta.Message = e.Message + " " + e.InnerException;
-
-        //    }
-        //    return Ok(respuesta);
-        //}
+       
     }
 }
