@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Serialization;
 using System;
 
 
@@ -23,15 +24,11 @@ namespace ApiBase
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //DbContext configuration
-            services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("dBConnectionDev"),
-           sqlServerOptionsAction: sqlOptions => {
-               sqlOptions.EnableRetryOnFailure(
-                   maxRetryCount: 10,
-                   maxRetryDelay: TimeSpan.FromSeconds(30),
-                   errorNumbersToAdd: null
-               );
-           }));
+     
+
+            //JSON Serializer
+            services.AddControllersWithViews().AddNewtonsoftJson(options=>options.SerializerSettings.ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+                .AddNewtonsoftJson(options=>options.SerializerSettings.ContractResolver = new DefaultContractResolver());
             //CorsConfigurations
             services.AddCors(options =>
             {
@@ -46,10 +43,10 @@ namespace ApiBase
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiBase", Version = "v1" });
-              
+
             });
             //config Repository
-            services.AddScoped<IRepository, Repository<AppDbContext>>();
+            //services.AddScoped<IRepository, Repository<AppDbContext>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
