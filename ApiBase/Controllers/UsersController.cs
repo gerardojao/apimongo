@@ -13,22 +13,27 @@ using MongoDB.Driver;
 
 namespace ApiBase.Controllers
 {
+
+
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-    
-     
+       
+
         public UsersController( IConfiguration configuration)
         {
             _configuration = configuration;           
           
         }
+       
 
         [HttpGet]
         public JsonResult Get()
         {
+
+         
             MongoClient dbClient = new MongoClient(_configuration.GetConnectionString("dBConnection"));
             var dbList = dbClient.GetDatabase("newproject").GetCollection<Users>("users").AsQueryable();
 
@@ -38,6 +43,7 @@ namespace ApiBase.Controllers
         [HttpPost]
         public JsonResult Post(Users us)
         {
+
             MongoClient dbClient = new MongoClient(_configuration.GetConnectionString("dBConnection"));
             int lastUserId = dbClient.GetDatabase("newproject").GetCollection<Users>("users").AsQueryable().Count();
             us.UserId = lastUserId + 1;
